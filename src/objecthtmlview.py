@@ -67,6 +67,7 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
         for index in range(self.Count):
             if self.GetClientData(index) is obj:
                 self.SetString(index, self.renderer(obj))
+        self.Refresh()
     
     def HasObject(self, obj):
         for index in range(self.Count):
