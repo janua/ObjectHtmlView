@@ -15,7 +15,8 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
     
     def AddObject(self, obj):
         #self.object_list.append(obj)
-        self.Insert(self.renderer(obj), self.Count, obj)
+        if not self.HasObject(obj):
+            self.Insert(self.renderer(obj), self.Count, obj)
     
     def AddObjects(self, obj_list):
         for obj in obj_list:
@@ -61,4 +62,15 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
         if selection > -1:
             return self.GetClientData(selection)
         return None
+
+    def RefreshObject(self, obj):
+        for index in range(self.Count):
+            if self.GetClientData(index) is obj:
+                self.SetString(index, self.renderer(obj))
+    
+    def HasObject(self, obj):
+        for index in range(self.Count):
+            if self.GetClientData(index) is obj:
+                return True
+        return False
         

@@ -37,6 +37,12 @@ class TestObjectHtmlViewAddRemove(unittest.TestCase):
         
     def test_remove_non_existing_object(self):
         self.assertRaises(ValueError, self.ohl.RemoveObject, {})
+        
+    def test_add_same_object(self):
+        o = {'an':'object'}
+        self.ohl.AddObject(o)
+        self.ohl.AddObject(o)
+        self.assertEqual(1, self.ohl.GetObjectCount())
 
 class TestObjectHtmlViewOrder(unittest.TestCase):
     
@@ -125,6 +131,35 @@ class TestObjectHtmlViewSelection(unittest.TestCase):
         self.ohl.SelectObject(o3)
         self.assertEqual(o3, self.ohl.GetSelectedObject())
 
+class TestObjectHtmlViewRefresh(unittest.TestCase):
+    
+    def setUp(self):
+        app = wx.PySimpleApp()
+        frame = wx.Frame(None)
+        self.ohl = ObjectHtmlView(frame)
+        frame.Show()
+    
+    def test_refresh_object(self):
+        o = {'text':'lots of text'}
+        self.ohl.AddObject(o)
+        o['random'] = 'new random string'
+        self.ohl.RefreshObject(o)
+        self.assertEqual(self.ohl.GetObjectAt(0)['random'], o['random'])
+        self.assertEqual(self.ohl.GetString(0), self.ohl.renderer(o))
+
+class TestObjectHtmlViewExistance(unittest.TestCase):
+    
+    def setUp(self):
+        app = wx.PySimpleApp()
+        frame = wx.Frame(None)
+        self.ohl = ObjectHtmlView(frame)
+        frame.Show()
+        
+    def test_has_object(self):
+        o = {'an':'object'}
+        self.ohl.AddObject(o)
+        self.assertTrue(self.ohl.HasObject(o))
+    
 if __name__ == '__main__':
     
     unittest.main()
