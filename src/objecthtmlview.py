@@ -8,10 +8,10 @@ from reportlab.lib.validators import isCallable
 
 class ObjectHtmlView(wx.SimpleHtmlListBox):    
     
-    def __init__(self, parent):
+    def __init__(self, parent, *args, **kwargs):
         self.object_list = []
         self.renderer = None
-        wx.SimpleHtmlListBox.__init__(self, parent)
+        wx.SimpleHtmlListBox.__init__(self, parent, *args, **kwargs)
     
     def AddObject(self, obj):
         self.object_list.append(obj)
