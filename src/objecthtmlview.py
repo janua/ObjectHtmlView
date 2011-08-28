@@ -74,4 +74,29 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
             if self.GetClientData(index) is obj:
                 return True
         return False
+
+    def GetIndexOf(self, obj):
+        for index in range(self.Count):
+            if self.GetClientData(index) is obj:
+                return index
+        raise ValueError('This object does not exist')
+
+    def MoveUp(self, obj):
+        obj_index = self.GetIndexOf(obj)
+        if obj_index:
+            before = self.GetClientData(obj_index-1)
+            self.SetClientData(obj_index-1, obj)
+            self.SetClientData(obj_index, before)
+            self.RefreshObject(obj)
+            self.RefreshObject(before)
+    
+    def MoveDown(self, obj):
+        obj_index = self.GetIndexOf(obj)
+        if obj_index < self.Count-1:
+            after = self.GetClientData(obj_index+1)
+            self.SetClientData(obj_index+1, obj)
+            self.SetClientData(obj_index, after)
+            self.RefreshObject(obj)
+            self.RefreshObject(after)
+        
         

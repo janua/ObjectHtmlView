@@ -70,6 +70,20 @@ class TestObjectHtmlViewOrder(unittest.TestCase):
         self.ohl.AddObjects((o, o2))
         self.assertTrue(o in self.ohl.GetObjects())
         self.assertTrue(o2 in self.ohl.GetObjects())
+    
+    def test_get_index(self):
+        o = {'index':'object'}
+        self.ohl.AddObject(o)
+        self.assertEqual(0, self.ohl.GetIndexOf(o))
+
+    def test_get_index_two_object(self):
+        o, o2 = {'index':'object'}, {'index':'object 2'}
+        self.ohl.AddObjects((o, o2))
+        self.assertEqual(1, self.ohl.GetIndexOf(o2))
+    
+    def test_get_index_non_exist(self):
+        self.assertRaises(ValueError, self.ohl.GetIndexOf, {'non':'existant'})
+        
 
 class TestObjectHtmlViewRendering(unittest.TestCase):
     
@@ -159,6 +173,43 @@ class TestObjectHtmlViewExistance(unittest.TestCase):
         o = {'an':'object'}
         self.ohl.AddObject(o)
         self.assertTrue(self.ohl.HasObject(o))
+        
+    def test_not_have_object(self):
+        self.assertFalse(self.ohl.HasObject({'non':'existant'}))
+
+class TestObjectHtmlViewMovement(unittest.TestCase):
+    
+    def setUp(self):
+        app = wx.PySimpleApp()
+        frame = wx.Frame(None)
+        self.ohl = ObjectHtmlView(frame)
+        frame.Show()
+        
+    def test_move_up(self):
+        o, o2 = {'top':'object'}, {'bottom':'object'}
+        self.ohl.AddObjects((o,o2))
+        self.ohl.MoveUp(o2)
+        self.assertEqual(o2, self.ohl.GetObjectAt(0))
+    
+    def test_move_down(self):
+        o, o2 = {'top':'object'}, {'bottom':'object'}
+        self.ohl.AddObjects((o,o2))
+        self.ohl.MoveDown(o)
+        self.assertEqual(o, self.ohl.GetObjectAt(1))
+    
+    def test_move_up_top(self):
+        o = {'top':'object'}
+        self.ohl.AddObject(o)
+        self.ohl.MoveUp(o)
+        self.assertEqual(0, self.ohl.GetIndexOf(o))
+    
+    def test_move_bottom(self):
+        o = {'top':'object'}
+        self.ohl.AddObject(o)
+        self.ohl.MoveDown(o)
+        self.assertEqual(0, self.ohl.GetIndexOf(o))
+    
+        
     
 if __name__ == '__main__':
     
