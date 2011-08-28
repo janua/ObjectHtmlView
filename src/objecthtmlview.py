@@ -4,7 +4,6 @@ Created on 1 Feb 2011
 @author: Francis
 '''
 import wx
-from reportlab.lib.validators import isCallable
 
 class ObjectHtmlView(wx.SimpleHtmlListBox):    
     
@@ -42,7 +41,7 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
             yield self.GetClientData(index)
                 
     def SetRenderer(self, renderer):
-        if not isCallable(renderer):
+        if not callable(renderer):
             raise TypeError('This object is not callable.')
         else:
             self.renderer = renderer
