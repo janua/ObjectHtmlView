@@ -15,6 +15,7 @@ class Frame(wx.Frame):
     
     def _init_panel(self):
         main_sizer = wx.BoxSizer(orient=wx.HORIZONTAL)
+        right_sizer = wx.BoxSizer(orient=wx.VERTICAL)
         
         self.ohl = ObjectHtmlView(self)
         self.ohl.SetRenderer(renderer)
@@ -28,10 +29,20 @@ class Frame(wx.Frame):
         change_button = wx.Button(self, wx.ID_ANY, 'Change Object')
         self.Bind(wx.EVT_BUTTON, self._handle_change, id=change_button.GetId())      
         
+        move_down_button = wx.Button(self, wx.ID_ANY, 'Move Down Object')
+        self.Bind(wx.EVT_BUTTON, self._handle_move_down, id=move_down_button.GetId())
+        
+        move_up_button = wx.Button(self, wx.ID_ANY, 'Move Up Object')
+        self.Bind(wx.EVT_BUTTON, self._handle_move_up, id=move_up_button.GetId())
+        
         main_sizer.Add(self.ohl, proportion=1, flag=wx.GROW)
-        main_sizer.Add(add_button)
-        main_sizer.Add(add_same_button)
-        main_sizer.Add(change_button)
+        right_sizer.Add(add_button)
+        right_sizer.Add(add_same_button)
+        right_sizer.Add(change_button)
+        right_sizer.Add(move_down_button)
+        right_sizer.Add(move_up_button)
+        
+        main_sizer.AddSizer(right_sizer)
         
         self.SetSizer(main_sizer)
 
@@ -45,6 +56,12 @@ class Frame(wx.Frame):
         o = self.ohl.GetClientData(1)
         o['text'] = 'Changed Text!'
         self.ohl.RefreshObject(o)
+    
+    def _handle_move_down(self, event):
+        self.ohl.MoveDown(O)
+
+    def _handle_move_up(self, event):
+        self.ohl.MoveUp(O)
 
 def renderer(obj):
     return '<b><u>%s:</u></b>%s' % (obj['title'], obj['text'])
