@@ -104,14 +104,12 @@ class TestObjectHtmlViewSelection(unittest.TestCase):
     def test_select_object_one(self):
         o = {'an':'object'}
         self.ohl.AddObject(o)
-        self.ohl.RefreshObjects()
         self.ohl.SelectObject(o)
         self.assertEqual(o, self.ohl.GetSelectedObject())
     
     def test_select_object_two(self):
         o, o2 = {'an':'object'}, {'object':'2'}
         self.ohl.AddObjects((o, o2))
-        self.ohl.RefreshObjects()
         self.ohl.SelectObject(o)
         self.assertEqual(o, self.ohl.GetSelectedObject())
         self.ohl.SelectObject(o2)
@@ -120,7 +118,6 @@ class TestObjectHtmlViewSelection(unittest.TestCase):
     def test_select_object_three(self):
         o, o2, o3 = {'an':'object'}, {'object':'2'}, {'o':'2'}
         self.ohl.AddObjects((o, o2, o3))
-        self.ohl.RefreshObjects()
         self.ohl.SelectObject(o)
         self.assertEqual(o, self.ohl.GetSelectedObject())
         self.ohl.SelectObject(o2)

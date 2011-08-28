@@ -10,31 +10,36 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
     
     def __init__(self, parent, *args, **kwargs):
         self.object_list = []
-        self.renderer = None
+        self.renderer = lambda x: str(x)
         wx.SimpleHtmlListBox.__init__(self, parent, *args, **kwargs)
     
     def AddObject(self, obj):
-        self.object_list.append(obj)
+        #self.object_list.append(obj)
+        self.Insert(self.renderer(obj), self.Count, obj)
     
     def AddObjects(self, obj_list):
         for obj in obj_list:
             self.AddObject(obj)
     
     def RemoveObject(self, obj):
-        self.object_list.remove(obj)
+        for index in range(self.Count):
+            if self.GetClientData(index) == obj:
+                self.Delete(index)
+                return
+        raise ValueError('This object does not exist')
 
     def GetObjectCount(self):
-        return len(self.object_list)
+        return self.Count
     
     def GetObjectAt(self, index):
-        try:
-            return self.object_list[index]
-        except IndexError:
-            raise IndexError('That index does not exist.')
+        if index < self.Count:
+            return self.GetClientData(index)
+        raise IndexError('That index does not exist.')
     
     def GetObjects(self):
-        return self.object_list
-
+        for index in range(self.Count):
+            yield self.GetClientData(index)
+                
     def SetRenderer(self, renderer):
         if not isCallable(renderer):
             raise TypeError('This object is not callable.')
@@ -44,12 +49,6 @@ class ObjectHtmlView(wx.SimpleHtmlListBox):
     def GetRenderer(self):
         return self.renderer
     
-    def RefreshObjects(self):
-        self.Clear()
-        for obj in self.object_list:
-            rendered = self.renderer(obj)
-            self.Insert(rendered, self.Count, obj)
-            
     def SelectObject(self, obj):
         for number in range(self.Count):
             if self.GetClientData(number) is obj:
